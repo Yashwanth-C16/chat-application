@@ -4,6 +4,11 @@ app = FastAPI()
 
 active_connections = {}  # {websocket: username}
 
+@app.get("/")
+def root():
+    return {"message":"server open"}
+
+
 @app.websocket("/ws/{username}")
 async def websocket_endpoint(websocket: WebSocket, username: str):
    
@@ -48,4 +53,5 @@ async def websocket_endpoint(websocket: WebSocket, username: str):
         del active_connections[websocket]
         for connection in active_connections:
             await connection.send_text(f"{left_user} has left")
+
         
