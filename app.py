@@ -24,9 +24,10 @@ async def websocket_endpoint(websocket: WebSocket, username: str):
         while True:
             data = await websocket.receive_text()
 
+            sender_name=active_connections[websocket]
             for web_soc,connection in active_connections.items():
                 if web_soc!=websocket:
-                    await web_soc.send_text(f"{connection}:{data}")
+                    await web_soc.send_text(f"{sender_name}:{data}")
 
     except WebSocketDisconnect:
         # TODO: remove this connection and broadcast that they left
