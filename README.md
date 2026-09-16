@@ -2,7 +2,7 @@
 
 A real-time group chat application built with FastAPI's native WebSocket support — demonstrates persistent, bidirectional client-server communication as an alternative to the traditional request-response HTTP model.
 
-**Live demo:** [Add your deployment link here]
+**Live demo:** https://resplendent-profiterole-0dc126.netlify.app/
 
 ---
 
