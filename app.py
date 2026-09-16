@@ -6,7 +6,18 @@ active_connections = {}  # {websocket: username}
 
 @app.websocket("/ws/{username}")
 async def websocket_endpoint(websocket: WebSocket, username: str):
+   
     await websocket.accept()
+    is_taken=False
+    for value in active_connections.values():
+        if value==username:
+            is_taken=True
+            break
+
+    if is_taken:
+        await websocket.close(code=4000,reason="Username already taken,choose different Username")
+        return
+    
     active_connections[websocket] = username
 
     # broadcast that someone joined
@@ -30,8 +41,10 @@ async def websocket_endpoint(websocket: WebSocket, username: str):
                     await web_soc.send_text(f"{sender_name}:{data}")
 
     except WebSocketDisconnect:
-        # TODO: remove this connection and broadcast that they left
-        left_user=active_connections[websocket]
+        left_user=active_connections.get(websocket)
+        if left_user is None:
+            return
+        
         del active_connections[websocket]
         for connection in active_connections:
             await connection.send_text(f"{left_user} has left")
