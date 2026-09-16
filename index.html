@@ -265,10 +265,18 @@
       addMessage(data, isMine ? 'mine' : 'theirs');
     };
 
-    socket.onclose = () => {
+    socket.onclose = (event) => {
       statusLabel.textContent = 'disconnected';
       msgInput.disabled = true;
       sendBtn.disabled = true;
+
+      // if the connection was rejected with a reason (e.g. duplicate username),
+      // show it back on the join screen and let the user try again
+      if (event.reason) {
+        chatScreen.style.display = 'none';
+        joinScreen.style.display = 'block';
+        joinError.textContent = event.reason;
+      }
     };
 
     socket.onerror = () => {
